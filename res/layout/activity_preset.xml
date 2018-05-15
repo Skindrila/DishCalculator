@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.example.asus.activiteas.Activity.PresetActivity">
+
+    <Button
+        android:id="@+id/light_button"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:text="@string/preset_light"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="124dp"
+        />
+
+    <Button
+        android:id="@+id/medium_button"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:text="@string/preset_medium"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="124dp" />
+
+    <Button
+        android:id="@+id/hard_button"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:text="@string/preset_hard"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="124dp" />
+
+</LinearLayout>
