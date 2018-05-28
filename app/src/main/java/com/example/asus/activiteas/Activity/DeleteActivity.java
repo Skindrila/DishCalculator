@@ -8,51 +8,43 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.example.asus.activiteas.DBPackage.Product;
+import com.example.asus.activiteas.DBPackage.ProductsHelper;
+import com.example.asus.activiteas.Logic.ListUpdater;
 import com.example.asus.activiteas.R;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteActivity extends AppCompatActivity {
 
-    public Product db = new Product();
+    protected ListUpdater listUpdater;
+    protected ProductsHelper productsHelper;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete);
 
+        listUpdater = new ListUpdater();
+        productsHelper = new ProductsHelper();
+
         final List<Product> products = Product.listAll(Product.class);
-        final ArrayList<Long> mDataSet = new ArrayList<Long>();
-        final List<String> myList = new ArrayList<String>();
-
-        for (int i = 0; i < products.size(); i++) {
-            mDataSet.add(products.get(i).getId());
-        }
-        for (Product product : products){
-            myList.add(product.toString());
-        }
-
+        final ArrayList<Long> mDataSet = new ArrayList<Long>(listUpdater.dataSetInput(products));
+        final List<String> myList = new ArrayList<String>(listUpdater.forDelete(products));
         final ListView lvMain = (ListView) findViewById(R.id.lvMain);
+
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myList);
         lvMain.setAdapter(adapter);
-        
         lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                db = Product.findById(Product.class, mDataSet.get(position));
-                db.delete();
-                Toast.makeText(getApplicationContext(),R.string.toast4,Toast.LENGTH_SHORT).show();
-                List<Product> production = Product.listAll(Product.class);
+                productsHelper.deleteItem(mDataSet.get(position));
+                products.clear();
+                products.addAll(productsHelper.getAllList());
                 mDataSet.clear();
-                for (int i = 0; i < production.size(); i++) {
-                    mDataSet.add(production.get(i).getId());
-                }
-                List<String> newList = new ArrayList<String>();
-                for (Product product : production){
-                    newList.add(product.toString());
-                }
+                mDataSet.addAll(listUpdater.dataSetInput(products));
                 myList.clear();
-                myList.addAll(newList);
+                myList.addAll(listUpdater.forDelete(products));
                 adapter.notifyDataSetInvalidated();
+                Toast.makeText(getApplicationContext(), R.string.toast4, Toast.LENGTH_SHORT).show();
             }
         });
     }

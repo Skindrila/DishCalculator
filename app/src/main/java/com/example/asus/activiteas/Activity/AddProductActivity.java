@@ -9,50 +9,33 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.asus.activiteas.DBPackage.Product;
+import com.example.asus.activiteas.DBPackage.ProductsHelper;
+import com.example.asus.activiteas.Logic.ProductPeace;
 import com.example.asus.activiteas.R;
-import com.example.asus.activiteas.Logic.Products;
 
 public class AddProductActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener{
 
-    private static final String LOG_TAG = "my_tag";
-    private TextView mTextView;
-    private EditText editText;
-    private Button button;
-    private Products products;
+    protected TextView mTextView;
+    protected EditText editText;
+    protected Button button;
+    protected ProductPeace products;
+    protected ProductsHelper productsHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
+
         button = (Button) findViewById(R.id.productAddButton);
         editText = (EditText) findViewById(R.id.enterName);
         editText.setMaxLines(10);
+        productsHelper = new ProductsHelper();
 
-
-        settings();
+        seekBarSettings();
         listener();
     }
 
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        mTextView.setText(String.valueOf(seekBar.getProgress()));
-    }
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        mTextView.setText(String.valueOf(seekBar.getProgress()));
-    }
-
-
-    private void settings(){
+    private void seekBarSettings(){
         mTextView = (TextView) findViewById(R.id.portionSeekbarText);
         mTextView.setText("0");
         final SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar2);
@@ -65,13 +48,14 @@ public class AddProductActivity extends AppCompatActivity implements SeekBar.OnS
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int number = Integer.parseInt(mTextView.getText().toString());
+
                 if(!(editText.getText().toString().equals("")))
-                if(number>0) {
-                    products = new Products();
+                if(Integer.parseInt(mTextView.getText().toString())>0) {
+                    products = new ProductPeace();
                     products.setName(editText.getText().toString());
-                    products.setPortion(number);
-                    saveDB(products);
+                    products.setPortion(Integer.parseInt(mTextView.getText().toString()));
+                    productsHelper.saveToDataBase(products);
+                    finish();
                     Intent intent = new Intent(AddProductActivity.this, HomeActivity.class);
                     startActivity(intent);
                 }
@@ -85,8 +69,17 @@ public class AddProductActivity extends AppCompatActivity implements SeekBar.OnS
         });
     }
 
-    private void saveDB(Products products){
-        Product db = new Product(products.getName(), products.getPortion());
-        db.save();
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        mTextView.setText(String.valueOf(seekBar.getProgress()));
+    }
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        mTextView.setText(String.valueOf(seekBar.getProgress()));
     }
 }

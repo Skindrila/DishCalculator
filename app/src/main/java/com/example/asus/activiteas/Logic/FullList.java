@@ -2,19 +2,19 @@ package com.example.asus.activiteas.Logic;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class FullList implements Parcelable{
 
-    protected List<Products> products = new ArrayList<>();
+    private List<ProductPeace> products;
+    private double level;
+    private double numPerson;
+    private String nameOfFile;
 
     public FullList(){
-
     }
 
-    public FullList(List<Products> products){
+    public FullList(List<ProductPeace> products){
 
         this.products = products;
     }
@@ -24,10 +24,13 @@ public class FullList implements Parcelable{
     }
 
     protected FullList(Parcel in) {
-        products = in.createTypedArrayList(Products.CREATOR);
+        products = in.createTypedArrayList(ProductPeace.CREATOR);
+        level = in.readDouble();
+        nameOfFile = in.readString();
+        numPerson = in.readDouble();
     }
 
-    public void setProducts(List<Products> products){
+    public void setProducts(List<ProductPeace> products){
         this.products = products;
     }
 
@@ -43,8 +46,32 @@ public class FullList implements Parcelable{
         }
     };
 
-    public List<Products> getProducts() {
+    public List<ProductPeace> getProducts() {
         return products;
+    }
+
+    public void setNameOfFile(String nameOfFile) {
+        this.nameOfFile = nameOfFile;
+    }
+
+    public void setLevel(double level) {
+        this.level = level;
+    }
+
+    public void setNumPerson(double numPerson) {
+        this.numPerson = numPerson;
+    }
+
+    public double getLevel() {
+        return level;
+    }
+
+    public double getNumPerson() {
+        return numPerson;
+    }
+
+    public String getNameOfFile() {
+        return nameOfFile;
     }
 
     @Override
@@ -55,5 +82,8 @@ public class FullList implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(products);
+        dest.writeDouble(level);
+        dest.writeString(nameOfFile);
+        dest.writeDouble(numPerson);
     }
 }

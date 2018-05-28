@@ -65,11 +65,11 @@ public class PDFHelper {
 
     private List<String> prepareForPDF(FullList fullList){
         List<String> rows = new ArrayList<String>();
-        List<Products> list = fullList.getProducts();
+        List<ProductPeace> list = fullList.getProducts();
 
         int len = list.size();
-        Products nextItem;
-        Products currentItem;
+        ProductPeace nextItem;
+        ProductPeace currentItem;
         int position;
         for(int i = 0; i<len;i++){
             currentItem = list.get(i);
@@ -89,7 +89,7 @@ public class PDFHelper {
             }while (position<len);
         }
         int k = 1;
-        for(Products product : list){
+        for(ProductPeace product : list){
             Double num = product.getPortion()*numOfPerson*mode;
             rows.add(k +". "+product.getName()+"-> Portion: "+Math.round(num) +"gr.");
             k++;
@@ -118,5 +118,26 @@ public class PDFHelper {
             sdPath = new File(sdPath + File.separator + "PdfFiles" + File.separator + fileName);
             sdPath.delete();
         }
+    }
+
+    public List<String> getFiles(){
+        List<String> listFilesNames = new ArrayList<String>();
+        File rootFolder = Environment.getExternalStorageDirectory();
+        rootFolder = new File(rootFolder + File.separator + "PdfFiles");
+        if (!rootFolder.exists())
+            rootFolder.mkdirs();
+        File[] fileArray = rootFolder.listFiles();
+        for(File file : fileArray){
+            listFilesNames.add(file.getName());
+        }
+        return listFilesNames;
+    }
+
+    public File[] getRootDir(){
+        File rootFolder = Environment.getExternalStorageDirectory();
+        rootFolder = new File(rootFolder + File.separator + "PdfFiles");
+        if (!rootFolder.exists())
+            rootFolder.mkdirs();
+        return rootFolder.listFiles();
     }
 }

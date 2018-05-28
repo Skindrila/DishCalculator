@@ -2,7 +2,6 @@ package com.example.asus.activiteas.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,18 +12,22 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.asus.activiteas.DBPackage.Product;
+import com.example.asus.activiteas.DBPackage.ProductsHelper;
+import com.example.asus.activiteas.Logic.ListUpdater;
+import com.example.asus.activiteas.Logic.PreferencesController;
+import com.example.asus.activiteas.Logic.ProductPeace;
 import com.example.asus.activiteas.R;
 import com.example.asus.activiteas.Logic.FullList;
-import com.example.asus.activiteas.Logic.Products;
-
 
 
 public class ListActivity extends Activity {
 
-    protected Product db = new Product();
-    protected List<Products> listOfProducts = new ArrayList<Products>();
-    protected FullList fullList = new FullList();
-    protected Button button;
+    protected List<ProductPeace> listOfProducts = new ArrayList<ProductPeace>();
+    protected FullList fullList;
+    protected Button toListOfProducts;
+    protected ListUpdater listUpdater;
+    protected ProductsHelper productsHelper;
+    protected PreferencesController preferencesController;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,64 +35,50 @@ public class ListActivity extends Activity {
 
         Toast.makeText(getApplicationContext(),R.string.toast5,Toast.LENGTH_SHORT).show();
 
-        FullList intentList = new FullList();
+        toListOfProducts =(Button) findViewById(R.id.toListOfProdButton);
+
+        preferencesController = new PreferencesController();
+        productsHelper = new ProductsHelper();
+        listUpdater = new ListUpdater();
+        fullList = new FullList();
+        fullList.setLevel(Double.parseDouble(
+                preferencesController.load("mode",getApplicationContext())));
+        fullList.setNameOfFile(preferencesController.load(
+                "file_name",getApplicationContext()));
+        fullList.setNumPerson(Double.parseDouble(
+                preferencesController.load("num",getApplicationContext())));
+
+        FullList intentList;
         intentList = (FullList) getIntent().getParcelableExtra(FullList.class.getCanonicalName());
         if(intentList != null)
         listOfProducts = intentList.getProducts();
 
-
         final List<Product> products = Product.listAll(Product.class);
-        List<String> myList = new ArrayList<String>();
-        final ArrayList<Long> mDataSet = new ArrayList<Long>();
-        button =(Button) findViewById(R.id.toListOfProdButton);
-
-        for (int i = 0; i < products.size(); i++) {
-            mDataSet.add(products.get(i).getId());
-        }
-
-        for (Product product : products){
-            String data = "";
-            data+=product.getName()+"\nПорция: ";
-            Double i = getModeLevel()*product.getPortion();
-            data+= Math.round(i);
-            myList.add(data);
-        }
+        final ArrayList<Long> mDataSet = new ArrayList<Long>(listUpdater.dataSetInput(products));
+        List<String> myList = new ArrayList<String>(listUpdater.onList(products,fullList.getLevel()));
 
         ListView lvMain = (ListView) findViewById(R.id.lvMain);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myList);
         lvMain.setAdapter(adapter);
 
-
         lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                db = Product.findById(Product.class, mDataSet.get(position));
-                Products pro = new Products();
-                pro.setName(db.getName());
-                pro.setPortion(db.getPortion());
-                listOfProducts.add(pro);
+                ProductPeace product = productsHelper.loadFromDataBase(mDataSet.get(position));
+                listOfProducts.add(product);
                 fullList.setProducts(listOfProducts);
             }
         });
 
-
-
-        button.setOnClickListener(new View.OnClickListener() {
+        toListOfProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fullList.setProducts(listOfProducts);
                 Intent intent = new Intent(ListActivity.this, ListOfProdActivity.class);
                 intent.putExtra(fullList.getClass().getCanonicalName(),fullList);
+                finish();
                 startActivity(intent);
             }
         });
-    }
-
-    public double getModeLevel(){
-        final String SAVED_TEXT = "mode";
-        SharedPreferences sPref;
-        sPref = getSharedPreferences("Options",MODE_PRIVATE);
-        String savedText = sPref.getString(SAVED_TEXT, "");
-        return Double.parseDouble(savedText);
     }
 }

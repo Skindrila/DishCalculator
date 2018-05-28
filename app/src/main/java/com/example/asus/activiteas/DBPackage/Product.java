@@ -22,7 +22,6 @@ public class Product extends SugarRecord {
         return portion;
     }
 
-
     public void setName(String name) {
         this.name = name;
     }

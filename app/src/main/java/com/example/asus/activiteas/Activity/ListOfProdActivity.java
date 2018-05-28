@@ -1,12 +1,8 @@
 package com.example.asus.activiteas.Activity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,10 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.example.asus.activiteas.Logic.ListUpdater;
 import com.example.asus.activiteas.Logic.PDFHelper;
+import com.example.asus.activiteas.Logic.StoragePermissions;
+import com.example.asus.activiteas.Logic.VibrateService;
 import com.example.asus.activiteas.R;
 import com.example.asus.activiteas.Logic.FullList;
-import com.example.asus.activiteas.Logic.Products;
+import com.example.asus.activiteas.Logic.ProductPeace;
 import com.itextpdf.text.DocumentException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -28,62 +27,50 @@ import java.util.List;
 public class ListOfProdActivity extends AppCompatActivity {
 
     protected FullList fullList;
-    private Button buttonPdf;
-    private Button buttonPrev;
-    private PDFHelper pdfHelper;
+    protected PDFHelper pdfHelper;
+    protected VibrateService vibrator;
+    protected ListUpdater listUpdater;
+    protected StoragePermissions storagePermissions;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_prod);
 
-        Toast.makeText(getApplicationContext(),R.string.toast6,Toast.LENGTH_SHORT).show();
-
+        storagePermissions = new StoragePermissions();
+        listUpdater = new ListUpdater();
         pdfHelper = new PDFHelper();
-        buttonPdf = (Button) findViewById(R.id.createPdfList);
-        buttonPrev = (Button) findViewById(R.id.buttonObratno);
+        Button buttonPdf = (Button) findViewById(R.id.createPdfList);
+        Button buttonPrevious = (Button) findViewById(R.id.buttonObratno);
         fullList = (FullList) getIntent().getParcelableExtra(FullList.class.getCanonicalName());
-        final List<Products> products= fullList.getProducts();
-        final List<String>myList = new ArrayList<String>();
+        final List<ProductPeace> products = fullList.getProducts();
+        pdfHelper.setMode(fullList.getLevel());
+        pdfHelper.setNameOfFile(fullList.getNameOfFile());
+        pdfHelper.setNumOfPerson(fullList.getNumPerson());
+        Toast.makeText(getApplicationContext(),/*R.string.toast6*/Double.toString(fullList.getLevel())+Double.toString(fullList.getNumPerson())+fullList.getNameOfFile(),Toast.LENGTH_SHORT).show();
+        final List<String> myList = new ArrayList<String>(listUpdater.onList(products, fullList.getLevel(),fullList.getNumPerson()));
 
-        pdfHelper.setMode(loadLevel());
-        pdfHelper.setNameOfFile(loadNameOfFile());
-        pdfHelper.setNumOfPerson(loadNumOfPerson());
-
-        for (Products product : products){
-            String data = "";
-            data+=product.getName()+"\nПорция: ";
-            Double i = loadLevel()*product.getPortion()*loadNumOfPerson();
-            data+= Math.round(i);
-            myList.add(data);
-        }
-
-        ListView lvMain = (ListView) findViewById(R.id.lvMain1);
+        ListView listViewMain = (ListView) findViewById(R.id.lvMain1);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myList);
-        lvMain.setAdapter(adapter);
-        lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewMain.setAdapter(adapter);
+
+        listViewMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                List<String> newList = new ArrayList<String>();
                 fullList.removeItem(position);
-                for (Products product : products){
-                    String data = "";
-                    data+=product.getName()+"\nПорция: ";
-                    Double i = loadLevel()*product.getPortion()*loadNumOfPerson();
-                    data+= Math.round(i);
-                    newList.add(data);
-                }
                 myList.clear();
-                myList.addAll(newList);
+                myList.addAll(listUpdater.onList(products, fullList.getLevel(),fullList.getNumPerson()));
                 adapter.notifyDataSetInvalidated();
             }
         });
 
-        buttonPrev.setOnClickListener(new View.OnClickListener() {
+        buttonPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ListOfProdActivity.this, ListActivity.class);
                 intent.putExtra(fullList.getClass().getCanonicalName(),fullList);
+                finish();
                 startActivity(intent);
             }
         });
@@ -93,42 +80,21 @@ public class ListOfProdActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    pdfHelper.createPDF(fullList, isStoragePermissionGranted());
+                    pdfHelper.createPDF(fullList, storagePermissions.isStoragePermissionWriteGranted(getApplicationContext(),ListOfProdActivity.this));
                 } catch (DocumentException | FileNotFoundException e) {
                     Toast.makeText(getApplicationContext(),R.string.toast7,Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
                 Intent intent = new Intent(ListOfProdActivity.this,HomeActivity.class);
+                vibrator= new VibrateService();
+                vibrator.Vibrate(500, getApplicationContext());
+                finish();
                 startActivity(intent);
             }
         });
     }
 
-    public Double loadNumOfPerson(){
-        final String SAVED_TEXT = "num";
-        SharedPreferences sPref;
-        sPref = getSharedPreferences("Options",MODE_PRIVATE);
-        String savedText = sPref.getString(SAVED_TEXT, "");
-        return Double.parseDouble(savedText);
-    }
-
-    public String loadNameOfFile(){
-        final String SAVED_TEXT = "file_name";
-        SharedPreferences sPref;
-        sPref = getSharedPreferences("Options",MODE_PRIVATE);
-        String savedText = sPref.getString(SAVED_TEXT, "");
-        return savedText;
-    }
-
-    public Double loadLevel(){
-        final String SAVED_TEXT = "mode";
-        SharedPreferences sPref;
-        sPref = getSharedPreferences("Options",MODE_PRIVATE);
-        String savedText = sPref.getString(SAVED_TEXT, "");
-        return Double.parseDouble(savedText);
-    }
-
-    public  boolean isStoragePermissionGranted() {
+    /*public  boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
@@ -142,5 +108,5 @@ public class ListOfProdActivity extends AppCompatActivity {
         else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
-    }
+    }*/
 }

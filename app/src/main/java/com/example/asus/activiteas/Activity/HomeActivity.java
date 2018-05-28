@@ -11,17 +11,16 @@ import com.example.asus.activiteas.R;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private Button startButton;
-    private Button aboutButton;
-    private Button exitButton;
-    private Button addButton;
-    private Button deleteProd;
-    private SharedPreferences options;
-    private Button savedList;
+    protected Button startButton;
+    protected Button aboutButton;
+    protected Button exitButton;
+    protected Button addButton;
+    protected Button deleteProd;
+    protected SharedPreferences options;
+    protected Button savedList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -32,9 +31,9 @@ public class HomeActivity extends AppCompatActivity {
         addButton = (Button) findViewById(R.id.buttonAdd);
         deleteProd = (Button) findViewById(R.id.buttonDelete);
 
-        options = getSharedPreferences("Options",MODE_PRIVATE);
+        /*options = getSharedPreferences("Options",MODE_PRIVATE);
         SharedPreferences.Editor editor = options.edit();
-        editor.commit();
+        editor.commit();*/
 
         savedList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +53,6 @@ public class HomeActivity extends AppCompatActivity {
         deleteProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(HomeActivity.this, DeleteActivity.class);
                 startActivity(intent);
             }
