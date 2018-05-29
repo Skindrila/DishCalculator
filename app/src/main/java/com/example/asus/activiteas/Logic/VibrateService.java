@@ -14,11 +14,6 @@ public class VibrateService{
     }
 
     public void Vibrate(int duration,Context context){
-        /*vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        if (vibrator != null) {
-            vibrator.vibrate(duration);
-        }*/
-
         if (Build.VERSION.SDK_INT >= 26) {
             ((Vibrator) context.getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {

@@ -31,4 +31,5 @@
     <string name="toast6">Select the products you want to remove from the list</string>
     <string name="toast7">Some file problems</string>
     <string name="toast8">Install pdf reader</string>
+    <string name="toast9">List is Empty</string>
 </resources>

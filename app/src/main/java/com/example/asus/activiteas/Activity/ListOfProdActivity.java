@@ -20,6 +20,7 @@ import com.example.asus.activiteas.Logic.FullList;
 import com.example.asus.activiteas.Logic.ProductPeace;
 import com.itextpdf.text.DocumentException;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class ListOfProdActivity extends AppCompatActivity {
         pdfHelper.setMode(fullList.getLevel());
         pdfHelper.setNameOfFile(fullList.getNameOfFile());
         pdfHelper.setNumOfPerson(fullList.getNumPerson());
-        Toast.makeText(getApplicationContext(),/*R.string.toast6*/Double.toString(fullList.getLevel())+Double.toString(fullList.getNumPerson())+fullList.getNameOfFile(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),R.string.toast6,Toast.LENGTH_SHORT).show();
         final List<String> myList = new ArrayList<String>(listUpdater.onList(products, fullList.getLevel(),fullList.getNumPerson()));
 
         ListView listViewMain = (ListView) findViewById(R.id.lvMain1);
@@ -80,8 +81,16 @@ public class ListOfProdActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    pdfHelper.createPDF(fullList, storagePermissions.isStoragePermissionWriteGranted(getApplicationContext(),ListOfProdActivity.this));
+                    if(!fullList.getProducts().isEmpty()){
+                    pdfHelper.createPDF(fullList, storagePermissions.isStoragePermissionWriteGranted(getApplicationContext(),
+                            ListOfProdActivity.this));
+                    }else {
+                        Toast.makeText(getApplicationContext(),R.string.toast9,Toast.LENGTH_SHORT).show();
+                    }
                 } catch (DocumentException | FileNotFoundException e) {
+                    Toast.makeText(getApplicationContext(),R.string.toast7,Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                } catch (IOException e) {
                     Toast.makeText(getApplicationContext(),R.string.toast7,Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }

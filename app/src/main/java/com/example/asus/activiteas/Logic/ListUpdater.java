@@ -1,6 +1,6 @@
 package com.example.asus.activiteas.Logic;
 
-import com.example.asus.activiteas.DBPackage.Product;
+import com.example.asus.activiteas.DataBase.Product;
 
 import java.util.ArrayList;
 import java.util.List;

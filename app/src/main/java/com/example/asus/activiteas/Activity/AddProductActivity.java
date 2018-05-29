@@ -9,8 +9,9 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.asus.activiteas.DBPackage.ProductsHelper;
+import com.example.asus.activiteas.DataBase.ProductsHelper;
 import com.example.asus.activiteas.Logic.ProductPeace;
+import com.example.asus.activiteas.Logic.VibrateService;
 import com.example.asus.activiteas.R;
 
 public class AddProductActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener{
@@ -20,12 +21,14 @@ public class AddProductActivity extends AppCompatActivity implements SeekBar.OnS
     protected Button button;
     protected ProductPeace products;
     protected ProductsHelper productsHelper;
+    protected VibrateService vibrateService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
 
+        vibrateService = new VibrateService();
         button = (Button) findViewById(R.id.productAddButton);
         editText = (EditText) findViewById(R.id.enterName);
         editText.setMaxLines(10);
@@ -60,9 +63,11 @@ public class AddProductActivity extends AppCompatActivity implements SeekBar.OnS
                     startActivity(intent);
                 }
                 else {
+                    vibrateService.Vibrate(500,getApplicationContext());
                     Toast.makeText(getApplicationContext(),R.string.toast2,Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    vibrateService.Vibrate(500,getApplicationContext());
                     Toast.makeText(getApplicationContext(),R.string.toast3,Toast.LENGTH_SHORT).show();
                 }
             }

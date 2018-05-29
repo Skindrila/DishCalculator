@@ -4,13 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,9 +42,11 @@ public class PDFHelper {
         this.numOfPerson = numOfPerson;
     }
 
-    public void createPDF(FullList fullList, boolean isStoragePermissionGranted) throws DocumentException, FileNotFoundException {
+    public void createPDF(FullList fullList, boolean isStoragePermissionGranted) throws DocumentException, IOException {
         List<String> products = prepareForPDF(fullList);
         if(isStoragePermissionGranted) {
+            BaseFont baseFNT=BaseFont.createFont("/assets/comic.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            Font font=new Font(baseFNT,30,Font.NORMAL);
             File sdPath = Environment.getExternalStorageDirectory();
             sdPath = new File(sdPath + File.separator + "PdfFiles");
             if (!sdPath.exists())
@@ -51,11 +58,11 @@ public class PDFHelper {
             document.open();
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
             String currentDateAndTime = sdf.format(new Date());
-            Paragraph paragraph = new Paragraph(currentDateAndTime+"\n");
+            Paragraph paragraph = new Paragraph(currentDateAndTime+"\n", font);
             document.add(paragraph);
             paragraph.clear();
             for (String product : products){
-                paragraph = new Paragraph(product);
+                paragraph = new Paragraph(product,font);
                 document.add(paragraph);
                 paragraph.clear();
             }
