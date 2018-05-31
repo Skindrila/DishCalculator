@@ -11,7 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.example.asus.activiteas.Logic.ListUpdater;
+
+import com.example.asus.activiteas.Logic.FullListController;
+import com.example.asus.activiteas.Logic.ListsUpdater;
 import com.example.asus.activiteas.Logic.PDFHelper;
 import com.example.asus.activiteas.Logic.StoragePermissions;
 import com.example.asus.activiteas.Logic.VibrateService;
@@ -27,41 +29,43 @@ import java.util.List;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class ListOfProdActivity extends AppCompatActivity {
 
-    protected FullList fullList;
+
+    protected FullListController fullListController;
     protected PDFHelper pdfHelper;
     protected VibrateService vibrator;
-    protected ListUpdater listUpdater;
+    protected ListsUpdater listsUpdater;
     protected StoragePermissions storagePermissions;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_prod);
 
+        fullListController = new FullListController();
         storagePermissions = new StoragePermissions();
-        listUpdater = new ListUpdater();
+        listsUpdater = new ListsUpdater();
         pdfHelper = new PDFHelper();
         Button buttonPdf = (Button) findViewById(R.id.createPdfList);
         Button buttonPrevious = (Button) findViewById(R.id.buttonObratno);
-        fullList = (FullList) getIntent().getParcelableExtra(FullList.class.getCanonicalName());
-        final List<ProductPeace> products = fullList.getProducts();
-        pdfHelper.setMode(fullList.getLevel());
-        pdfHelper.setNameOfFile(fullList.getNameOfFile());
-        pdfHelper.setNumOfPerson(fullList.getNumPerson());
+        fullListController.setFullList((FullList) getIntent().getParcelableExtra(FullList.class.getCanonicalName()));
+        final List<ProductPeace> products = fullListController.fullListGetProducts();
+        pdfHelper.setMode(fullListController.fullListGetLevel());
+        pdfHelper.setNameOfFile(fullListController.fullListGetNameOfFile());
+        pdfHelper.setNumOfPerson(fullListController.fullListGetNumOfPerson());
         Toast.makeText(getApplicationContext(),R.string.toast6,Toast.LENGTH_SHORT).show();
-        final List<String> myList = new ArrayList<String>(listUpdater.onList(products, fullList.getLevel(),fullList.getNumPerson()));
+        final List<String> myList = new ArrayList<String>(listsUpdater.onList(products,
+                fullListController.fullListGetLevel(),fullListController.fullListGetNumOfPerson()));
 
-        ListView listViewMain = (ListView) findViewById(R.id.lvMain1);
+        final ListView listViewMain = (ListView) findViewById(R.id.lvMain1);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myList);
         listViewMain.setAdapter(adapter);
 
         listViewMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                fullList.removeItem(position);
+                fullListController.fullListRemove(position);
                 myList.clear();
-                myList.addAll(listUpdater.onList(products, fullList.getLevel(),fullList.getNumPerson()));
+                myList.addAll(listsUpdater.onList(products, fullListController.fullListGetLevel(),fullListController.fullListGetNumOfPerson()));
                 adapter.notifyDataSetInvalidated();
             }
         });
@@ -70,7 +74,7 @@ public class ListOfProdActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ListOfProdActivity.this, ListActivity.class);
-                intent.putExtra(fullList.getClass().getCanonicalName(),fullList);
+                intent.putExtra(fullListController.fullListGet().getClass().getCanonicalName(),fullListController.fullListGet());
                 finish();
                 startActivity(intent);
             }
@@ -81,8 +85,8 @@ public class ListOfProdActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    if(!fullList.getProducts().isEmpty()){
-                    pdfHelper.createPDF(fullList, storagePermissions.isStoragePermissionWriteGranted(getApplicationContext(),
+                    if(!fullListController.fullListGetProducts().isEmpty()){
+                    pdfHelper.createPDF(fullListController.fullListGet(), storagePermissions.isStoragePermissionWriteGranted(getApplicationContext(),
                             ListOfProdActivity.this));
                     }else {
                         Toast.makeText(getApplicationContext(),R.string.toast9,Toast.LENGTH_SHORT).show();
@@ -94,28 +98,10 @@ public class ListOfProdActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),R.string.toast7,Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-                Intent intent = new Intent(ListOfProdActivity.this,HomeActivity.class);
                 vibrator= new VibrateService();
                 vibrator.Vibrate(500, getApplicationContext());
                 finish();
-                startActivity(intent);
             }
         });
     }
-
-    /*public  boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                return true;
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            return true;
-        }
-    }*/
 }

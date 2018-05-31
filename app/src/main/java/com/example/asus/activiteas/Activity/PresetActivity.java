@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import com.example.asus.activiteas.Logic.PreferencesController;
 import com.example.asus.activiteas.R;
-import com.example.asus.activiteas.Logic.Options;
 
 public class PresetActivity extends AppCompatActivity {
 
@@ -15,9 +14,10 @@ public class PresetActivity extends AppCompatActivity {
     protected Button mediumButton;
     protected Button hardButton;
     protected PreferencesController preferencesController;
-    private Options mode;
-
-    final String SAVED_TEXT = "mode";
+    public static final double mode1 = 0.7;
+    public static final double mode2 = 1;
+    public static final double mode3 = 1.5;
+    public static final String SAVED_TEXT = "mode";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +29,11 @@ public class PresetActivity extends AppCompatActivity {
         mediumButton = (Button) findViewById(R.id.medium_button);
         hardButton = (Button) findViewById(R.id.hard_button);
 
-        mode = new Options();
 
         lightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mode.setLevel(0.7);
-                preferencesController.save(SAVED_TEXT, Double.toString(mode.getLevel()),getApplicationContext());
+                preferencesController.save(SAVED_TEXT, Double.toString(mode1),getApplicationContext());
                 next();
             }
         });
@@ -43,8 +41,7 @@ public class PresetActivity extends AppCompatActivity {
         mediumButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mode.setLevel(1);
-                preferencesController.save(SAVED_TEXT, Double.toString(mode.getLevel()),getApplicationContext());
+                preferencesController.save(SAVED_TEXT, Double.toString(mode2),getApplicationContext());
                 next();
             }
         });
@@ -52,8 +49,7 @@ public class PresetActivity extends AppCompatActivity {
         hardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mode.setLevel(1.5);
-                preferencesController.save(SAVED_TEXT, Double.toString(mode.getLevel()),getApplicationContext());
+                preferencesController.save(SAVED_TEXT, Double.toString(mode3),getApplicationContext());
                 next();
             }
         });

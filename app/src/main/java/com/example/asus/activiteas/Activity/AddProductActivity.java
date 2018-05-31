@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.asus.activiteas.DataBase.ProductsHelper;
+import com.example.asus.activiteas.DataBase.DataBaseHelper;
 import com.example.asus.activiteas.Logic.ProductPeace;
 import com.example.asus.activiteas.Logic.VibrateService;
 import com.example.asus.activiteas.R;
@@ -20,7 +20,7 @@ public class AddProductActivity extends AppCompatActivity implements SeekBar.OnS
     protected EditText editText;
     protected Button button;
     protected ProductPeace products;
-    protected ProductsHelper productsHelper;
+    protected DataBaseHelper productsHelper;
     protected VibrateService vibrateService;
 
     @Override
@@ -32,7 +32,7 @@ public class AddProductActivity extends AppCompatActivity implements SeekBar.OnS
         button = (Button) findViewById(R.id.productAddButton);
         editText = (EditText) findViewById(R.id.enterName);
         editText.setMaxLines(10);
-        productsHelper = new ProductsHelper();
+        productsHelper = new DataBaseHelper();
 
         seekBarSettings();
         listener();

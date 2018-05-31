@@ -12,22 +12,19 @@ import android.widget.Toast;
 import com.example.asus.activiteas.Logic.PreferencesController;
 import com.example.asus.activiteas.Logic.VibrateService;
 import com.example.asus.activiteas.R;
-import com.example.asus.activiteas.Logic.Options;
 
 public class StartActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener{
 
     protected PreferencesController preferencesController;
     protected TextView mTextView;
     protected Button button;
-    protected Options people;
     protected VibrateService vibrator;
-    final String SAVED_TEXT = "num";
+    public static final String SAVED_TEXT = "num";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        people = new Options();
         preferencesController = new PreferencesController();
         settings();
         listener();

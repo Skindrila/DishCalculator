@@ -12,8 +12,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.asus.activiteas.DataBase.Product;
-import com.example.asus.activiteas.DataBase.ProductsHelper;
-import com.example.asus.activiteas.Logic.ListUpdater;
+import com.example.asus.activiteas.DataBase.DataBaseHelper;
+import com.example.asus.activiteas.Logic.FullListController;
+import com.example.asus.activiteas.Logic.ListsUpdater;
 import com.example.asus.activiteas.Logic.PreferencesController;
 import com.example.asus.activiteas.Logic.ProductPeace;
 import com.example.asus.activiteas.R;
@@ -23,11 +24,11 @@ import com.example.asus.activiteas.Logic.FullList;
 public class ListActivity extends Activity {
 
     protected List<ProductPeace> listOfProducts = new ArrayList<ProductPeace>();
-    protected FullList fullList;
     protected Button toListOfProducts;
-    protected ListUpdater listUpdater;
-    protected ProductsHelper productsHelper;
+    protected ListsUpdater listsUpdater;
+    protected DataBaseHelper productsHelper;
     protected PreferencesController preferencesController;
+    protected FullListController fullListController;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,15 +38,15 @@ public class ListActivity extends Activity {
 
         toListOfProducts =(Button) findViewById(R.id.toListOfProdButton);
 
+        fullListController = new FullListController();
         preferencesController = new PreferencesController();
-        productsHelper = new ProductsHelper();
-        listUpdater = new ListUpdater();
-        fullList = new FullList();
-        fullList.setLevel(Double.parseDouble(
+        productsHelper = new DataBaseHelper();
+        listsUpdater = new ListsUpdater();
+        fullListController.setFullListLevel(Double.parseDouble(
                 preferencesController.load("mode",getApplicationContext())));
-        fullList.setNameOfFile(preferencesController.load(
+        fullListController.setFullListNameOfFile(preferencesController.load(
                 "file_name",getApplicationContext()));
-        fullList.setNumPerson(Double.parseDouble(
+        fullListController.setFullListNumOfPeople(Double.parseDouble(
                 preferencesController.load("num",getApplicationContext())));
 
         FullList intentList;
@@ -54,8 +55,8 @@ public class ListActivity extends Activity {
         listOfProducts = intentList.getProducts();
 
         final List<Product> products = Product.listAll(Product.class);
-        final ArrayList<Long> mDataSet = new ArrayList<Long>(listUpdater.dataSetInput(products));
-        List<String> myList = new ArrayList<String>(listUpdater.onList(products,fullList.getLevel()));
+        final ArrayList<Long> mDataSet = new ArrayList<Long>(listsUpdater.dataSetInput(products));
+        List<String> myList = new ArrayList<String>(listsUpdater.onList(products,fullListController.fullListGetLevel()));
 
         ListView lvMain = (ListView) findViewById(R.id.lvMain);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myList);
@@ -66,16 +67,16 @@ public class ListActivity extends Activity {
                                     int position, long id) {
                 ProductPeace product = productsHelper.loadFromDataBase(mDataSet.get(position));
                 listOfProducts.add(product);
-                fullList.setProducts(listOfProducts);
+                fullListController.setFullListProducts(listOfProducts);
             }
         });
 
         toListOfProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fullList.setProducts(listOfProducts);
+                fullListController.setFullListProducts(listOfProducts);
                 Intent intent = new Intent(ListActivity.this, ListOfProdActivity.class);
-                intent.putExtra(fullList.getClass().getCanonicalName(),fullList);
+                intent.putExtra(fullListController.fullListGet().getClass().getCanonicalName(),fullListController.fullListGet());
                 finish();
                 startActivity(intent);
             }

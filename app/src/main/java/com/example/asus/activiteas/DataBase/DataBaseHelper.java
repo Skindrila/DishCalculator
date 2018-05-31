@@ -1,12 +1,12 @@
-package com.example.asus.activiteas.DBPackage;
+package com.example.asus.activiteas.DataBase;
 
 import com.example.asus.activiteas.Logic.ProductPeace;
 import java.util.List;
 
-public class ProductsHelper {
+public class DataBaseHelper {
     private Product DataBase;
 
-    public ProductsHelper(){
+    public DataBaseHelper(){
         DataBase = new Product();
     }
 

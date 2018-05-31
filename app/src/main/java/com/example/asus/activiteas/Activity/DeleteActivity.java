@@ -8,27 +8,27 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.example.asus.activiteas.DataBase.Product;
-import com.example.asus.activiteas.DataBase.ProductsHelper;
-import com.example.asus.activiteas.Logic.ListUpdater;
+import com.example.asus.activiteas.DataBase.DataBaseHelper;
+import com.example.asus.activiteas.Logic.ListsUpdater;
 import com.example.asus.activiteas.R;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteActivity extends AppCompatActivity {
 
-    protected ListUpdater listUpdater;
-    protected ProductsHelper productsHelper;
+    protected ListsUpdater listsUpdater;
+    protected DataBaseHelper productsHelper;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete);
 
-        listUpdater = new ListUpdater();
-        productsHelper = new ProductsHelper();
+        listsUpdater = new ListsUpdater();
+        productsHelper = new DataBaseHelper();
 
         final List<Product> products = Product.listAll(Product.class);
-        final ArrayList<Long> mDataSet = new ArrayList<Long>(listUpdater.dataSetInput(products));
-        final List<String> myList = new ArrayList<String>(listUpdater.forDelete(products));
+        final ArrayList<Long> mDataSet = new ArrayList<Long>(listsUpdater.dataSetInput(products));
+        final List<String> myList = new ArrayList<String>(listsUpdater.forDelete(products));
         final ListView lvMain = (ListView) findViewById(R.id.lvMain);
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myList);
@@ -40,9 +40,9 @@ public class DeleteActivity extends AppCompatActivity {
                 products.clear();
                 products.addAll(productsHelper.getAllList());
                 mDataSet.clear();
-                mDataSet.addAll(listUpdater.dataSetInput(products));
+                mDataSet.addAll(listsUpdater.dataSetInput(products));
                 myList.clear();
-                myList.addAll(listUpdater.forDelete(products));
+                myList.addAll(listsUpdater.forDelete(products));
                 adapter.notifyDataSetInvalidated();
                 Toast.makeText(getApplicationContext(), R.string.toast4, Toast.LENGTH_SHORT).show();
             }

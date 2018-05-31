@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.asus.activiteas.Logic.PDFHelper;
+import com.example.asus.activiteas.Logic.StoragePermissions;
 import com.example.asus.activiteas.R;
 
 public class HomeActivity extends AppCompatActivity {
@@ -16,7 +19,7 @@ public class HomeActivity extends AppCompatActivity {
     protected Button exitButton;
     protected Button addButton;
     protected Button deleteProd;
-    protected SharedPreferences options;
+    protected StoragePermissions storagePermissions;
     protected Button savedList;
 
     @Override
@@ -24,6 +27,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        storagePermissions = new StoragePermissions();
         savedList = (Button) findViewById(R.id.buttonSavedList);
         startButton = (Button) findViewById(R.id.buttonStart);
         aboutButton = (Button) findViewById(R.id.buttonAbout);
@@ -31,9 +35,7 @@ public class HomeActivity extends AppCompatActivity {
         addButton = (Button) findViewById(R.id.buttonAdd);
         deleteProd = (Button) findViewById(R.id.buttonDelete);
 
-        /*options = getSharedPreferences("Options",MODE_PRIVATE);
-        SharedPreferences.Editor editor = options.edit();
-        editor.commit();*/
+        storagePermissions.isStoragePermissionReadGranted(getApplicationContext(),this);
 
         savedList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +81,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, AddProductActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
