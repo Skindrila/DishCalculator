@@ -1,5 +1,5 @@
 *.iml
-.gradle
+*.gradle
 /local.properties
 /.idea/libraries
 /.idea/modules.xml
@@ -13,7 +13,6 @@
 /.gitignore
 *.bat
 .idea
-/gradle
 /app/build
 /app/src/androidTest
 /app/src/test
