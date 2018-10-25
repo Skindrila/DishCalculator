@@ -8,3 +8,12 @@
 /build
 /captures
 .externalNativeBuild
+/.gitattributes
+*.gradle
+/.gitignore
+*.bat
+.idea
+/gradle
+/app/build
+/app/src/androidTest
+/app/src/test
