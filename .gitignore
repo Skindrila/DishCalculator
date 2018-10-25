@@ -9,3 +9,5 @@ gradle/
 *.properties
 /gradlew
 *.bat
+.gitignore/
+/.gitignore
