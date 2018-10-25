@@ -11,3 +11,6 @@ gradle/
 *.bat
 .gitignore/
 .gitignore.txt
+
+#txt-files
+*.txt
