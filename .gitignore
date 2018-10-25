@@ -9,8 +9,7 @@ gradle/
 *.properties
 /gradlew
 *.bat
-.gitignore/
-.gitignore.txt
+
 
 #txt-files
 *.txt
