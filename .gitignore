@@ -10,4 +10,4 @@ gradle/
 /gradlew
 *.bat
 .gitignore/
-.gitignore
+.gitignore.txt
