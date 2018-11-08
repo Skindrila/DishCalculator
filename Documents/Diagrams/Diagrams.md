@@ -5,3 +5,5 @@
 [Диаграмма активности](https://github.com/messi3nik/DishCalculator/blob/master/Documents/Diagrams/Activities/Activities.md)
 
 [Диаграмма классов](https://github.com/messi3nik/DishCalculator/blob/master/Documents/Diagrams/ClassDiagram/ClassDiagram.md)
+
+[Диаграмма развёртывания](https://github.com/messi3nik/DishCalculator/blob/master/Documents/Diagrams/Deployment/Deployment.md)
