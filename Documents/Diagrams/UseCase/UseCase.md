@@ -1,8 +1,6 @@
 # Варианты использования
 
-![](https://pp.userapi.com/c830709/v830709912/1c55d9/izqjP8UW0g4.jpg)
-
-![UseCaseDiagram]()
+![UseCaseDiagram](https://pp.userapi.com/c830709/v830709912/1c55d9/izqjP8UW0g4.jpg
 
 # Содержание
 
