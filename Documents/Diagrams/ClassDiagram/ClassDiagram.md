@@ -1,1 +1,1 @@
-[Диаграмма классов](https://drive.google.com/file/d/1RWqoDlXd8D-z7HrssG5wR-dBu2rGRlip/view?usp=sharing)
+[Диаграмма классов](https://pp.userapi.com/c846521/v846521417/121f03/eLUe3ZXHnio.jpg)
