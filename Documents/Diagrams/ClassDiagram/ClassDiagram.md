@@ -1,3 +1,3 @@
 #Диаграмма классов
 
-![Диаграмма классов](https://pp.userapi.com/c846521/v846521417/121f03/eLUe3ZXHnio.jpg)
+![Диаграмма классов](https://pp.userapi.com/c851536/v851536657/423df/x1j4RGdmUGA.jpg)

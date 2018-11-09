@@ -6,4 +6,6 @@
 
 [Диаграмма классов](https://github.com/messi3nik/DishCalculator/blob/master/Documents/Diagrams/ClassDiagram/ClassDiagram.md)
 
-[Диаграмма развёртывания](https://github.com/messi3nik/DishCalculator/blob/master/Documents/Diagrams/Deployment/Deployment.md)
+[Диаграмма компонентов](https://github.com/messi3nik/DishCalculator/blob/master/Documents/Diagrams/Components/Components.md)
+
+[Диаграмма состояникй](https://github.com/messi3nik/DishCalculator/blob/master/Documents/Diagrams/State/State.md)
