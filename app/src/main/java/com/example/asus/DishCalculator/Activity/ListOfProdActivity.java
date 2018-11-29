@@ -29,7 +29,6 @@ import java.util.List;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class ListOfProdActivity extends AppCompatActivity {
 
-
     protected FullListController fullListController;
     protected PDFHelper pdfHelper;
     protected VibrateService vibrator;
@@ -45,14 +44,19 @@ public class ListOfProdActivity extends AppCompatActivity {
         storagePermissions = new StoragePermissions();
         listsUpdater = new ListsUpdater();
         pdfHelper = new PDFHelper();
+
         Button buttonPdf = (Button) findViewById(R.id.createPdfList);
-        Button buttonPrevious = (Button) findViewById(R.id.buttonObratno);
+        Button buttonPrevious = (Button) findViewById(R.id.buttonBack);
+
         fullListController.setFullList((FullList) getIntent().getParcelableExtra(FullList.class.getCanonicalName()));
         final List<ProductPeace> products = fullListController.fullListGetProducts();
+
         pdfHelper.setMode(fullListController.fullListGetLevel());
         pdfHelper.setNameOfFile(fullListController.fullListGetNameOfFile());
         pdfHelper.setNumOfPerson(fullListController.fullListGetNumOfPerson());
+
         Toast.makeText(getApplicationContext(),R.string.toast6,Toast.LENGTH_SHORT).show();
+
         final List<String> myList = new ArrayList<String>(listsUpdater.onList(products,
                 fullListController.fullListGetLevel(),fullListController.fullListGetNumOfPerson()));
 

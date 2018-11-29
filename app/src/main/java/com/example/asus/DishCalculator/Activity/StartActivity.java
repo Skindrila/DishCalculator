@@ -19,7 +19,7 @@ public class StartActivity extends AppCompatActivity implements SeekBar.OnSeekBa
     protected TextView mTextView;
     protected Button button;
     protected VibrateService vibrator;
-    public static final String SAVED_TEXT = "num";
+    private static final String SAVED_TEXT = "num";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -14,10 +14,10 @@ public class PresetActivity extends AppCompatActivity {
     protected Button mediumButton;
     protected Button hardButton;
     protected PreferencesController preferencesController;
-    public static final double mode1 = 0.7;
-    public static final double mode2 = 1;
-    public static final double mode3 = 1.5;
-    public static final String SAVED_TEXT = "mode";
+    protected static final double mode1 = 0.7;
+    protected static final double mode2 = 1;
+    protected static final double mode3 = 1.5;
+    protected static final String SAVED_TEXT = "mode";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class PresetActivity extends AppCompatActivity {
         });
     }
 
-    void next(){
+    private void next(){
         Intent intent = new Intent(PresetActivity.this, ListActivity.class);
         finish();
         startActivity(intent);
